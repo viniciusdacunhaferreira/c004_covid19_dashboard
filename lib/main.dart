@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// A type representing the various available data points
 enum DataPoint {
@@ -60,7 +61,67 @@ class Dashboard extends StatelessWidget {
       51245,
       7452340,
     ];
-    // TODO: Implement UI
-    return const Placeholder();
+
+    return ListView.separated(
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      itemCount: DataPoint.values.length,
+      itemBuilder: (_, index) {
+        final String name = DataPoint.values[index].name;
+        final String assetPath = DataPoint.values[index].assetPath;
+        final int value = values[index];
+        final Color color = DataPoint.values[index].color;
+
+        return DataPointCard(
+          name: name,
+          color: color,
+          assetPath: assetPath,
+          value: value,
+        );
+      },
+    );
+  }
+}
+
+class DataPointCard extends StatelessWidget {
+  const DataPointCard({
+    super.key,
+    required this.name,
+    required this.color,
+    required this.assetPath,
+    required this.value,
+  });
+
+  final String name;
+  final Color color;
+  final String assetPath;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(
+          name,
+          style: TextStyle(
+            color: color,
+            fontSize: 24,
+          ),
+        ),
+        subtitle: Align(
+          alignment: Alignment.centerLeft,
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            child: Image.asset(assetPath),
+          ),
+        ),
+        trailing: Text(
+          NumberFormat.decimalPattern().format(value),
+          style: TextStyle(
+            color: color,
+            fontSize: 24,
+          ),
+        ),
+      ),
+    );
   }
 }
