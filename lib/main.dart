@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// A type representing the various available data points
 enum DataPoint {
@@ -60,7 +61,64 @@ class Dashboard extends StatelessWidget {
       51245,
       7452340,
     ];
-    // TODO: Implement UI
-    return const Placeholder();
+    return ListView(
+      children: [
+        for (final dataPoint in DataPoint.values)
+          DataPointCard(
+            endpoint: dataPoint,
+            value: values[dataPoint.index],
+          ),
+      ],
+    );
+  }
+}
+
+class DataPointCard extends StatelessWidget {
+  const DataPointCard({super.key, required this.endpoint, required this.value});
+  final DataPoint endpoint;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                endpoint.name,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .copyWith(color: endpoint.color),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    endpoint.assetPath,
+                    color: endpoint.color,
+                    height: 48,
+                  ),
+                  Text(
+                    NumberFormat('#,###,###,###').format(value),
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                          color: endpoint.color,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
