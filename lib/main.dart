@@ -66,16 +66,9 @@ class Dashboard extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemCount: DataPoint.values.length,
       itemBuilder: (_, index) {
-        final String name = DataPoint.values[index].name;
-        final String assetPath = DataPoint.values[index].assetPath;
-        final int value = values[index];
-        final Color color = DataPoint.values[index].color;
-
         return DataPointCard(
-          name: name,
-          color: color,
-          assetPath: assetPath,
-          value: value,
+          dataPoint: DataPoint.values[index],
+          value: values[index],
         );
       },
     );
@@ -85,41 +78,41 @@ class Dashboard extends StatelessWidget {
 class DataPointCard extends StatelessWidget {
   const DataPointCard({
     super.key,
-    required this.name,
-    required this.color,
-    required this.assetPath,
+    required this.dataPoint,
     required this.value,
   });
 
-  final String name;
-  final Color color;
-  final String assetPath;
+  final DataPoint dataPoint;
   final int value;
 
   @override
   Widget build(BuildContext context) {
+    final String name = dataPoint.name;
+    final Color color = dataPoint.color;
+    final String assetPath = dataPoint.assetPath;
+
     return Card(
-      child: ListTile(
-        title: Text(
-          name,
-          style: TextStyle(
-            color: color,
-            fontSize: 24,
-          ),
-        ),
-        subtitle: Align(
-          alignment: Alignment.centerLeft,
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-            child: Image.asset(assetPath),
-          ),
-        ),
-        trailing: Text(
-          NumberFormat.decimalPattern().format(value),
-          style: TextStyle(
-            color: color,
-            fontSize: 24,
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(name, style: TextStyle(color: color, fontSize: 24)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(assetPath, color: color),
+                Text(
+                  NumberFormat.decimalPattern().format(value),
+                  style: TextStyle(color: color, fontSize: 24),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
