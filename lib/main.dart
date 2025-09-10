@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// A type representing the various available data points
 enum DataPoint {
@@ -60,7 +61,60 @@ class Dashboard extends StatelessWidget {
       51245,
       7452340,
     ];
-    // TODO: Implement UI
-    return const Placeholder();
+
+    return ListView.separated(
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      itemCount: DataPoint.values.length,
+      itemBuilder: (_, index) {
+        return DataPointCard(
+          dataPoint: DataPoint.values[index],
+          value: values[index],
+        );
+      },
+    );
+  }
+}
+
+class DataPointCard extends StatelessWidget {
+  const DataPointCard({
+    super.key,
+    required this.dataPoint,
+    required this.value,
+  });
+
+  final DataPoint dataPoint;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final String name = dataPoint.name;
+    final Color color = dataPoint.color;
+    final String assetPath = dataPoint.assetPath;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(name, style: TextStyle(color: color, fontSize: 24)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(assetPath, color: color),
+                Text(
+                  NumberFormat.decimalPattern().format(value),
+                  style: TextStyle(color: color, fontSize: 24),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
